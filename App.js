@@ -4,6 +4,10 @@ import { RNCamera } from 'react-native-camera';
 
 export default class App extends PureComponent {
   
+  state = {
+    barcodes: [],
+  }
+
   takePicture = async() => {
     if (this.camera) {
       const options = { quality: 0.5, base64: true };
@@ -14,6 +18,12 @@ export default class App extends PureComponent {
   
   barcodeRecognized = ({barcodes}) => {
     barcodes.forEach(barcode => console.warn(barcode.data))
+  };
+
+  renderBarcodes = () => {
+    <View>
+      {this.state.barcodes.map(this.renderBarcodes)}
+    </View>
   };
 
   render() {
@@ -29,8 +39,10 @@ export default class App extends PureComponent {
           }}
           onGoogleVisionBarcodesDetected={this.barcodeRecognized}
         />
+        {this.renderBarcodes()}
       </View>
     );
+  }
 }
 
 const styles = StyleSheet.create({
