@@ -8,23 +8,43 @@ export default class App extends PureComponent {
     barcodes: [],
   }
 
-  takePicture = async() => {
-    if (this.camera) {
-      const options = { quality: 0.5, base64: true };
-      const data = await this.camera.takePictureAsync(options);
-      console.log(data.uri);
-    }
-  };
-  
-  barcodeRecognized = ({barcodes}) => {
-    barcodes.forEach(barcode => console.warn(barcode.data))
-  };
+  barcodeRecognized = ({barcodes}) => this.setState({barcodes});
+  //barcodes.forEach(barcode => console.warn(barcode.data))
 
-  renderBarcodes = () => {
+  renderBarcodes = () => (
     <View>
-      {this.state.barcodes.map(this.renderBarcodes)}
+      {this.state.barcodes.map(this.renderBarcode)}
     </View>
-  };
+  );
+
+  renderBarcode = ({bounds, data}) => (
+    <React.Fragment key={data + bounds.origin.x}>
+      <View
+        style={{
+          borderWidth: 2,
+          borderRadius: 10,
+          position: 'absolute',
+          borderColor: '#F00',
+          justifyContent: 'center',
+          backgroundColor: 'rgba(255,255,255,0)',
+          padding: 10,
+          ...bounds.size,
+          left: bounds.origin.x,
+          top: bounds.origin.y,
+        }}
+      >
+        <Text style={{
+          color: '#ABC',
+          flex: 1,
+          position: 'absolute',
+          textAlign: 'center',
+          backgroundColor: 'transparent',
+        }}>
+          {data}
+        </Text>
+      </View>
+    </React.Fragment>
+  );
 
   render() {
     return (
